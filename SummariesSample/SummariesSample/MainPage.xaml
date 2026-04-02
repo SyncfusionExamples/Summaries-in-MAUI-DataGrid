@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datagrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+             xmlns:local="clr-namespace:SummariesSample"
+             x:Class="SummariesSample.MainPage"
+             SafeAreaEdges="All">
+
+    <ContentPage.BindingContext>
+        <local:OrderInfoViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:GroupCaptionConverter x:Key="SummaryConverter" />
+        </ResourceDictionary>
+        <Style TargetType="datagrid:DataGridCaptionSummaryRowView">
+            <Setter Property="Background" Value="PowderBlue"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold, Italic" />
+        </Style>
+    </ContentPage.Resources>
+
+    <datagrid:SfDataGrid x:Name="dataGrid" ItemsSource="{Binding OrdersInfo}"
+                         ColumnWidthMode="{OnPlatform Android=Auto, WinUI=Fill, MacCatalyst=Fill, iOS=Auto}" 
+                         AllowGroupExpandCollapse="True" AutoGenerateColumnsMode="None" 
+                         GridLinesVisibility="Both" HeaderGridLinesVisibility="Both">
+
+        <datagrid:SfDataGrid.CaptionSummaryTemplate>
+            <DataTemplate>
+                <StackLayout Orientation="Horizontal" Spacing="8" >
+                    <Image Source="icon.png" WidthRequest="24" HeightRequest="24"/>
+                    <Label Text="{Binding Converter={StaticResource SummaryConverter}, ConverterParameter = {x:Reference dataGrid}}" VerticalTextAlignment="Center"/>
+                </StackLayout>
+            </DataTemplate>
+        </datagrid:SfDataGrid.CaptionSummaryTemplate>
+
+        <datagrid:SfDataGrid.GroupColumnDescriptions>
+            <datagrid:GroupColumnDescription ColumnName="FirstName"/>
+        </datagrid:SfDataGrid.GroupColumnDescriptions>
+
+        <datagrid:SfDataGrid.CaptionSummaryRow>
+            <datagrid:DataGridSummaryRow ShowSummaryInRow="True" Title="Total Price :{Price} for {ProductCount} members">
+                <datagrid:DataGridSummaryRow.SummaryColumns>
+                    <datagrid:DataGridSummaryColumn Name="Price"
+                                                    MappingName="Price" Format="{}{Sum:C0}"
+                                                    SummaryType="Int32Aggregate" />
+                    <datagrid:DataGridSummaryColumn Name="ProductCount"
+                                                    Format="{}{Count}"
+                                                    MappingName="Price"
+                                                    SummaryType="CountAggregate" />
+                </datagrid:DataGridSummaryRow.SummaryColumns>
+            </datagrid:DataGridSummaryRow>
+        </datagrid:SfDataGrid.CaptionSummaryRow>
+
+        <datagrid:SfDataGrid.GroupSummaryRows>
+            <datagrid:DataGridSummaryRow ShowSummaryInRow="True"
+                                         Title="Total Price: {Price} for {customerID} members">
+                <datagrid:DataGridSummaryRow.SummaryColumns>
+                    <datagrid:DataGridSummaryColumn Name="Price"
+                                                    MappingName="Price"
+                                                    Format="{}{Sum:C0}"
+                                                    SummaryType="DoubleAggregate">
+                    </datagrid:DataGridSummaryColumn>
+                    <datagrid:DataGridSummaryColumn Name="customerID"
+                                                    MappingName="CustomerID"
+                                                    Format="{}{Count}"
+                                                    SummaryType="CountAggregate">
+                    </datagrid:DataGridSummaryColumn>
+                </datagrid:DataGridSummaryRow.SummaryColumns>
+            </datagrid:DataGridSummaryRow>
+        </datagrid:SfDataGrid.GroupSummaryRows>
+
+        <datagrid:SfDataGrid.TableSummaryRows>
+            <datagrid:DataGridTableSummaryRow ShowSummaryInRow="True" Title="Total Price: {Price} for {ID} items" TitleColumnCount="2" Position="Bottom" >
+                <datagrid:DataGridTableSummaryRow.SummaryColumns>
+                    <datagrid:DataGridSummaryColumn Name="Price"
+                                                    Format="{}{Sum:C0}"
+                                                    MappingName="Price"
+                                                    SummaryType="DoubleAggregate" />
+                    <datagrid:DataGridSummaryColumn Name="ID"
+                                                    Format="{}{Count}"
+                                                    MappingName="CustomerID"
+                                                    SummaryType="CountAggregate" />
+                </datagrid:DataGridTableSummaryRow.SummaryColumns>
+            </datagrid:DataGridTableSummaryRow>
+        </datagrid:SfDataGrid.TableSummaryRows>
+
+        <datagrid:SfDataGrid.Columns>
+            <datagrid:DataGridNumericColumn Format="D" MappingName="OrderID" HeaderText="Order ID" 
+                                            CellTextAlignment="Start" HeaderTextAlignment="Start"/>
+            <datagrid:DataGridNumericColumn Format="D" MappingName="EmployeeID" HeaderText="Customer ID"/>
+            <datagrid:DataGridTextColumn MappingName="FirstName" HeaderText="Name"/>
+            <datagrid:DataGridNumericColumn Format="C" MappingName="Freight" HeaderText="Freight"/>
+            <datagrid:DataGridTextColumn MappingName="ShipCity" HeaderText="City"/>
+            <datagrid:DataGridNumericColumn Format="C" MappingName="Price" HeaderText="Price"/>
+        </datagrid:SfDataGrid.Columns>
+    </datagrid:SfDataGrid>
+
+</ContentPage>
